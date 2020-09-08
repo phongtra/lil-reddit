@@ -39,6 +39,14 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, em }: MyContext) {
+    if (!req.session.userId) {
+      return null;
+    }
+    const user = await em.findOne(User, { id: req.session.userId });
+    return user;
+  }
   @Mutation(() => UserResponse)
   async register(
     @Arg('options') options: UsernameAndPassword,
@@ -87,7 +95,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async login(
     @Arg('options') options: UsernameAndPassword,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     const user = await em.findOne(User, { username: options.username });
     if (!user) {
@@ -102,7 +110,7 @@ export class UserResolver {
         errors: [{ field: 'password', message: 'incorrect password' }]
       };
     }
-
+    req.session.userId = user.id;
     return { user };
   }
 }
