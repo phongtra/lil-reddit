@@ -4,9 +4,12 @@ import {
   FormControl,
   FormLabel,
   Input,
-  FormErrorMessage
+  FormErrorMessage,
+  Box,
+  Button
 } from '@chakra-ui/core';
 import { Wrappper } from '../components/Wrapper';
+import { InputField } from '../components/InputField';
 
 const Register: React.FC = () => {
   return (
@@ -15,16 +18,31 @@ const Register: React.FC = () => {
         initialValues={{ username: '', password: '' }}
         onSubmit={(values) => console.log(values)}
       >
-        {({ values, handleChange }) => (
+        {({ values, handleChange, isSubmitting }) => (
           <Form>
             <FormControl>
               <FormLabel htmlFor='username'>Username</FormLabel>
-              <Input
-                value={values.username}
-                onChange={handleChange}
-                id='username'
+              <InputField
+                name='username'
                 placeholder='Username'
+                label='Username'
               />
+              <Box mt={4}>
+                <InputField
+                  name='password'
+                  placeholder='Password'
+                  label='Password'
+                  type='password'
+                />
+              </Box>
+              <Button
+                type='submit'
+                variantColor='teal'
+                mt={4}
+                isLoading={isSubmitting}
+              >
+                Register
+              </Button>
               {/* <FormErrorMessage>{form.errors.name}</FormErrorMessage> */}
             </FormControl>
           </Form>
