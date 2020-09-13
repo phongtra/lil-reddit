@@ -77,7 +77,7 @@ let UserResolver = class UserResolver {
             return user;
         });
     }
-    register(options, { em }) {
+    register(options, { em, req }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (options.username.length <= 2) {
                 return {
@@ -117,6 +117,7 @@ let UserResolver = class UserResolver {
                 }
                 console.log(e.message);
             }
+            req.session.userId = user.id;
             return { user };
         });
     }
