@@ -11,6 +11,7 @@ import {
 import argon2 from 'argon2';
 import { MyContext } from '../types';
 import { User } from '../entities/User';
+import { EntityManager } from '@mikro-orm/postgresql';
 
 @InputType()
 class UsernameAndPassword {
@@ -50,7 +51,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg('options') options: UsernameAndPassword,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     if (options.username.length <= 2) {
       return {
@@ -73,12 +74,20 @@ export class UserResolver {
       };
     }
     const hashedPassword = await argon2.hash(options.password);
-    const user = em.create(User, {
-      username: options.username,
-      password: hashedPassword
-    });
+    let user;
     try {
-      await em.persistAndFlush(user);
+      // await em.persistAndFlush(user);
+      const result = await (em as EntityManager)
+        .createQueryBuilder(User)
+        .getKnexQuery()
+        .insert({
+          username: options.username,
+          password: hashedPassword,
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+        .returning('*');
+      user = result[0];
     } catch (e) {
       if (e.code === '23505') {
         //|| e.detail.includes("already exists")) {
@@ -90,6 +99,7 @@ export class UserResolver {
       }
       console.log(e.message);
     }
+    req.session.userId = user.id;
     return { user };
   }
   @Mutation(() => UserResponse)
