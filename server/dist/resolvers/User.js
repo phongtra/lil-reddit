@@ -117,7 +117,12 @@ let UserResolver = class UserResolver {
                 : { username: usernameOrEmail });
             if (!user) {
                 return {
-                    errors: [{ field: 'username', message: "username doesn't exits" }]
+                    errors: [
+                        {
+                            field: 'usernameOrEmail',
+                            message: "user doesn't exits"
+                        }
+                    ]
                 };
             }
             const valid = yield argon2_1.default.verify(user.password, password);

@@ -101,7 +101,12 @@ export class UserResolver {
     );
     if (!user) {
       return {
-        errors: [{ field: 'username', message: "username doesn't exits" }]
+        errors: [
+          {
+            field: 'usernameOrEmail',
+            message: "user doesn't exits"
+          }
+        ]
       };
     }
 
