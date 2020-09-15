@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.22.4/libexec/bin/yarn.js add create:migration
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.22.4/libexec/bin/yarn.js add redis-io uuid
 
 PATH: 
   /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/inmac/anaconda3/bin:/Users/inmac/anaconda3/condabin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/usr/X11/bin:/Users/inmac/anaconda/bin
@@ -14,17 +14,17 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: create:migration: Invalid protocol: create:
-      at Request.module.exports.Request.init (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:141017:31)
-      at new Request (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:140690:8)
-      at request (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:137596:10)
-      at RequestManager.execute (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:67039:15)
-      at RequestManager.shiftQueue (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:67077:10)
-      at /usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:66746:13
-      at new Promise (<anonymous>)
-      at new F (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:5301:28)
-      at RequestManager.request (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:66744:19)
-      at NpmRegistry.<anonymous> (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:31704:42)
+  Error: https://registry.yarnpkg.com/redis-io: Not found
+      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:66987:18)
+      at Request.self.callback (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:140748:22)
+      at Request.emit (events.js:310:20)
+      at Request.<anonymous> (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:141720:10)
+      at Request.emit (events.js:310:20)
+      at IncomingMessage.<anonymous> (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:141642:12)
+      at Object.onceWrapper (events.js:416:28)
+      at IncomingMessage.emit (events.js:322:22)
+      at endReadableNT (_stream_readable.js:1187:12)
+      at processTicksAndRejections (internal/process/task_queues.js:84:21)
 
 npm manifest: 
   {
