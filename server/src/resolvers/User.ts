@@ -16,6 +16,7 @@ import { UsernameAndPassword } from '../utils/UsernameAndPassword';
 import { validateRegister } from '../utils/validateRegister';
 import { sendEmail } from '../utils/sendEmail';
 import { v4 } from 'uuid';
+import { emit } from 'process';
 
 @ObjectType()
 class FieldError {
@@ -36,6 +37,45 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Mutation(() => UserResponse)
+  async changePassword(
+    @Arg('token') token: string,
+    @Arg('newPassword') newPassword: string,
+    @Ctx() { redis, em, req }: MyContext
+  ): Promise<UserResponse> {
+    if (newPassword.length <= 3) {
+      return {
+        errors: [
+          {
+            field: 'newPassword',
+            message: 'length must be greater than 3'
+          }
+        ]
+      };
+    }
+    const userId = await redis.get(FORGET_PASSWORD_PREFIX + token);
+    if (!userId) {
+      return {
+        errors: [
+          {
+            field: 'token',
+            message: 'token expired'
+          }
+        ]
+      };
+    }
+    const user = await em.findOne(User, { id: parseInt(userId) });
+    if (!user) {
+      return {
+        errors: [{ field: 'token', message: 'user is no longer exist' }]
+      };
+    }
+    user.password = await argon2.hash(newPassword);
+    await em.persistAndFlush(user);
+    //log user in adter they changed password
+    req.session.userId = user.id;
+    return { user };
+  }
   @Mutation(() => Boolean)
   async forgotPassword(
     @Arg('email') email: string,
@@ -55,7 +95,7 @@ export class UserResolver {
     );
     sendEmail(
       email,
-      `<a href="http://localhost:3000/forgot-password/${token}">reset password</a>`
+      `<a href="http://localhost:3000/change-password/${token}">reset password</a>`
     );
     return true;
   }
