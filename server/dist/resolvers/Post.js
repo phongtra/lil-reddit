@@ -51,7 +51,7 @@ let PostResolver = class PostResolver {
             .orderBy('"createdAt"', 'DESC')
             .take(realLimit);
         if (cursor) {
-            qb.where('"createdAt" < : cursor', {
+            qb.where('"createdAt" < :cursor', {
                 cursor: new Date(parseInt(cursor))
             });
         }
