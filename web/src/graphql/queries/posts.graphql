@@ -8,6 +8,11 @@ query Posts($limit: Int!, $cursor: String) {
       title
       text
       textSnippet
+      creator {
+        id
+        username
+        email
+      }
     }
   }
 }
