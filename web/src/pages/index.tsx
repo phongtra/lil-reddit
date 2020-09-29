@@ -16,6 +16,7 @@ import { createUrqlClient } from '../utils/createUrqlClient';
 import NextLink from 'next/link';
 import { useState } from 'react';
 import { UpdootSection } from '../components/UpdootSection';
+import { isServer } from '../utils/isServer';
 
 const Index = () => {
   const [variables, setVariables] = useState({

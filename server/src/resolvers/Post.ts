@@ -12,8 +12,7 @@ import {
   UseMiddleware,
   FieldResolver,
   Root,
-  ObjectType,
-  Info
+  ObjectType
 } from 'type-graphql';
 import { getConnection } from 'typeorm';
 import { Post } from '../entities/Post';
@@ -99,36 +98,46 @@ export class PostResolver {
   @Query(() => PaginatedPosts)
   async posts(
     @Arg('limit', () => Int) limit: number,
-    @Arg('cursor', () => String, { nullable: true }) cursor: string | null
+    @Arg('cursor', () => String, { nullable: true }) cursor: string | null,
+    @Ctx() { req }: MyContext
   ): Promise<PaginatedPosts> {
     const realLimit = Math.min(50, limit);
     const realLimitPlusOne = realLimit + 1;
 
     const replacements: any[] = [realLimitPlusOne];
-
+    if (req.session.userId) {
+      replacements.push(req.session.userId);
+    }
+    let cursorIndex = 3;
     if (cursor) {
       replacements.push(new Date(parseInt(cursor)));
+      cursorIndex = replacements.length;
     }
 
     const posts = await getConnection().query(
       `
-      select p.*, 
-      json_build_object(
-        'id', u.id,
-        'username', u.username,
-        'email', u.email,
-        '"createdAt"', u."createdAt",
-        '"updatedAt"', u."updatedAt"
-      ) creator
-      from post p
-      inner join public.user u on u.id = p."creatorId"
-      ${cursor ? `where p."createdAt" < $2` : ''}
-      order by p."createdAt" DESC
-      limit $1
+      select p.*,
+    json_build_object(
+      'id', u.id,
+      'username', u.username,
+      'email', u.email,
+      'createdAt', u."createdAt",
+      'updatedAt', u."updatedAt"
+      ) creator,
+    ${
+      req.session.userId
+        ? '(select value from updoot where "userId" = $2 and "postId" = p.id) "voteStatus"'
+        : 'null as "voteStatus"'
+    }
+    from post p
+    inner join public.user u on u.id = p."creatorId"
+    ${cursor ? `where p."createdAt" < $${cursorIndex}` : ''}
+    order by p."createdAt" DESC
+    limit $1
     `,
       replacements
     );
-    console.log(posts);
+
     // const qb = getConnection()
     //   .getRepository(Post)
     //   .createQueryBuilder('p')
