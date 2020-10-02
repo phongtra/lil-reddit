@@ -123,7 +123,7 @@ export const cursorPagination = (): Resolver => {
 //   };
 // };
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
-  let cookie = isServer() ? ctx.req.headers.cookie : '';
+  let cookie = isServer() ? ctx?.req?.headers?.cookie : '';
   return {
     url: 'http://localhost:4000/graphql',
     fetchOptions: {
