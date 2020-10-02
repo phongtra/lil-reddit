@@ -1,14 +1,11 @@
 import React from 'react';
-import { Box, Link, Flex, Button } from '@chakra-ui/core';
+import { Box, Link, Flex, Button, Heading } from '@chakra-ui/core';
 import NextLink from 'next/link';
 import { useMeQuery, useLogoutMutation } from '../generated/graphql';
-import { isServer } from '../utils/isServer';
 
 export const NavBar: React.FC = () => {
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
-  const [{ data, fetching }] = useMeQuery({
-    pause: isServer()
-  });
+  const [{ data, fetching }] = useMeQuery();
   let body = null;
   if (fetching) {
   } else if (!data?.me) {
@@ -24,7 +21,12 @@ export const NavBar: React.FC = () => {
     );
   } else {
     body = (
-      <Flex>
+      <Flex align='center'>
+        <NextLink href='/create-post'>
+          <Button as={Link} mr={4}>
+            create post
+          </Button>
+        </NextLink>
         <Box mr={4}>{data.me.username}</Box>
         <Button
           variant='link'
@@ -38,7 +40,14 @@ export const NavBar: React.FC = () => {
   }
   return (
     <Flex position='sticky' top={0} zIndex={1} p={4} bg='tan'>
-      <Box ml='auto'>{body}</Box>
+      <Flex maxW={800} align='center' flex={1} m='auto'>
+        <NextLink href='/'>
+          <Link>
+            <Heading>Lil-Reddit</Heading>
+          </Link>
+        </NextLink>
+        <Box ml='auto'>{body}</Box>
+      </Flex>
     </Flex>
   );
 };
