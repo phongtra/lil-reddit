@@ -20,6 +20,7 @@ import { createUrqlClient } from '../utils/createUrqlClient';
 import NextLink from 'next/link';
 import { useState } from 'react';
 import { UpdootSection } from '../components/UpdootSection';
+import { EditDeletePostButton } from '../components/EditDeletePostButton';
 
 const Index = () => {
   const [variables, setVariables] = useState({
@@ -57,23 +58,7 @@ const Index = () => {
                       </Text>
                       {meData?.me?.id === p.creator.id && (
                         <Box ml='auto'>
-                          <NextLink href={`/post/edit/${p.id}`}>
-                            <IconButton
-                              as={Link}
-                              icon='edit'
-                              mr={4}
-                              aria-label='Edit Post'
-                              onClick={() => {}}
-                            />
-                          </NextLink>
-
-                          <IconButton
-                            icon='delete'
-                            aria-label='Delete Post'
-                            onClick={() => {
-                              deletePost({ id: p.id });
-                            }}
-                          />
+                          <EditDeletePostButton id={p.id} />
                         </Box>
                       )}
                     </Flex>
