@@ -6,9 +6,11 @@ COPY package.json ./
 COPY yarn.lock ./
 
 RUN yarn
-RUN yarn build
+
 
 COPY . .
+COPY .env.production .env
+RUN yarn build
 
 EXPOSE 8080
 

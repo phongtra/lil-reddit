@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
+require("dotenv-safe/config");
 const constants_1 = require("./constants");
 const express_1 = __importDefault(require("express"));
 const apollo_server_express_1 = require("apollo-server-express");
@@ -33,9 +34,7 @@ const createUserLoader_1 = require("./utils/createUserLoader");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield typeorm_1.createConnection({
         type: 'postgres',
-        database: 'lil-reddit2',
-        username: 'postgres',
-        password: '2606',
+        url: process.env.DATABASE_URL,
         logging: true,
         synchronize: true,
         migrations: [path_1.default.join(__dirname, './migrations/*')],
@@ -44,8 +43,9 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     yield conn.runMigrations();
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);
-    const redis = new ioredis_1.default();
-    app.use(cors_1.default({ origin: 'http://localhost:3000', credentials: true }));
+    const redis = new ioredis_1.default(process.env.REDIS_URL);
+    app.set('proxy', 1);
+    app.use(cors_1.default({ origin: process.env.CORS_ORIGIN, credentials: true }));
     app.use(express_session_1.default({
         name: constants_1.COOKIE_NAME,
         store: new RedisStore({
@@ -57,9 +57,10 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             maxAge: 1000 * 60 * 60 * 24 * 365,
             httpOnly: true,
             sameSite: 'lax',
-            secure: constants_1.__prod__
+            secure: constants_1.__prod__,
+            domain: constants_1.__prod__ ? '.codeponder.com' : undefined
         },
-        secret: 'sadjkhsajhdksahdkasjhdakdhak',
+        secret: process.env.SESSION_SECRET,
         resave: false
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
@@ -75,8 +76,8 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         })
     });
     apolloServer.applyMiddleware({ app, cors: false });
-    app.listen(4000, () => {
-        console.log('Listening on port 4000');
+    app.listen(parseInt(process.env.PORT), () => {
+        console.log('Listening on port ' + process.env.PORT);
     });
 });
 main();
