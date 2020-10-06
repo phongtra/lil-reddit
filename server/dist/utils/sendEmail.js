@@ -16,7 +16,7 @@ exports.sendEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 function sendEmail(to, html) {
     return __awaiter(this, void 0, void 0, function* () {
-        let testAccount = yield nodemailer_1.default.createTestAccount();
+        yield nodemailer_1.default.createTestAccount();
         let transporter = nodemailer_1.default.createTransport({
             host: 'smtp.ethereal.email',
             port: 587,

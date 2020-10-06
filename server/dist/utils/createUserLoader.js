@@ -8,16 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FakePosts1601132533603 = void 0;
-class FakePosts1601132533603 {
-    up(_queryRunner) {
-        return __awaiter(this, void 0, void 0, function* () {
-        });
-    }
-    down(_) {
-        return __awaiter(this, void 0, void 0, function* () { });
-    }
-}
-exports.FakePosts1601132533603 = FakePosts1601132533603;
-//# sourceMappingURL=1601132533603-FakePosts.js.map
+exports.createUserLoader = void 0;
+const dataloader_1 = __importDefault(require("dataloader"));
+const User_1 = require("../entities/User");
+exports.createUserLoader = () => new dataloader_1.default((userIds) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield User_1.User.findByIds(userIds);
+    const userIdToUser = {};
+    users.forEach((u) => {
+        userIdToUser[u.id] = u;
+    });
+    return userIds.map((userId) => userIdToUser[userId]);
+}));
+//# sourceMappingURL=createUserLoader.js.map

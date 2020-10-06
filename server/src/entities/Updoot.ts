@@ -1,4 +1,4 @@
-import { ObjectType, Field } from 'type-graphql';
+import { ObjectType } from 'type-graphql';
 import { Entity, BaseEntity, ManyToOne, PrimaryColumn, Column } from 'typeorm';
 import { Post } from './Post';
 import { User } from './User';
