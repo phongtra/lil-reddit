@@ -36,7 +36,6 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         type: 'postgres',
         url: process.env.DATABASE_URL,
         logging: true,
-        synchronize: true,
         migrations: [path_1.default.join(__dirname, './migrations/*')],
         entities: [Post_2.Post, User_2.User, Updoot_1.Updoot]
     });
