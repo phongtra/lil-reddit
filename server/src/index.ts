@@ -18,7 +18,6 @@ import { User } from './entities/User';
 import path from 'path';
 import { Updoot } from './entities/Updoot';
 import { createUserLoader } from './utils/createUserLoader';
-import { createUpdootLoader } from './utils/createUpdootLoader';
 
 const main = async () => {
   const conn = await createConnection({
@@ -67,8 +66,7 @@ const main = async () => {
       req,
       res,
       redis,
-      userLoader: createUserLoader(),
-      updootLoader: createUpdootLoader()
+      userLoader: createUserLoader()
     })
   });
   apolloServer.applyMiddleware({ app, cors: false });

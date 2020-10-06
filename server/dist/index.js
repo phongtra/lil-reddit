@@ -30,7 +30,6 @@ const User_2 = require("./entities/User");
 const path_1 = __importDefault(require("path"));
 const Updoot_1 = require("./entities/Updoot");
 const createUserLoader_1 = require("./utils/createUserLoader");
-const createUpdootLoader_1 = require("./utils/createUpdootLoader");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield typeorm_1.createConnection({
         type: 'postgres',
@@ -72,8 +71,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             req,
             res,
             redis,
-            userLoader: createUserLoader_1.createUserLoader(),
-            updootLoader: createUpdootLoader_1.createUpdootLoader()
+            userLoader: createUserLoader_1.createUserLoader()
         })
     });
     apolloServer.applyMiddleware({ app, cors: false });
